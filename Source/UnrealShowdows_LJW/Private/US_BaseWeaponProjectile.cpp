@@ -56,16 +56,21 @@ void AUS_BaseWeaponProjectile::BeginPlay()
 void AUS_BaseWeaponProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	if (!HasAuthority()) return;
+
 	auto ComputedDamage = Damage;
 	if(const auto Character = Cast<AUS_Character>(GetInstigator()))
 	{
-		ComputedDamage *=Character->GetCharacterStats()->DamageMultipier;
+		if (Character->GetCharacterStats())
+		{
+			ComputedDamage *= Character->GetCharacterStats()->DamageMultipier;
+		}
 	}
 
 	if(OtherActor && OtherActor != this)
 	{
-		const FDamageEvent Event(UDamageType::StaticClass());
-		OtherActor->TakeDamage(ComputedDamage,Event,GetInstigatorController(),this);
+		UGameplayStatics::ApplyDamage(
+			OtherActor, ComputedDamage, GetInstigatorController(), this, UDamageType::StaticClass());
 	}
 	Destroy();
 }
@@ -76,4 +81,3 @@ void AUS_BaseWeaponProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-

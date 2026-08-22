@@ -32,6 +32,8 @@ void AUS_PlayerState::OnRep_IsReady(bool OldValue) const
 
 void AUS_PlayerState::AddXp(int32 Value)
 {
+	if (!HasAuthority()) return;
+
 	Xp += Value;
 	//Broadcast 모든 코드에 이 델리게이트 함수와 연관된 모든 코드를 (인자값)을 전달하면서 호출
 	OnXpChange.Broadcast(Value);
@@ -40,8 +42,9 @@ void AUS_PlayerState::AddXp(int32 Value)
 	//UE_LOG(LogTemp, Warning, TEXT("AddXp"));
 	if (const auto Character = Cast<AUS_Character>(GetPawn()))
 	{
+		const FUS_CharacterStats* Stats = Character->GetCharacterStats();
 		//UE_LOG(LogTemp, Warning, TEXT("Character"));
-		if(Character->GetCharacterStats()->NextLevelXp<Xp)
+		if(Stats && Stats->NextLevelXp < Xp)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("LEVEL UP"));
 			//GEngine->AddOnScreenDebugMessage(3,5.0f,FColor::Red,TEXT("LEVEL UP"));

@@ -449,6 +449,8 @@ float AUS_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 	// 1. 부모 클래스 로직 실행
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
+	if (!HasAuthority()) return ActualDamage;
+
 	// 데미지가 0 이하거나 이미 죽었으면 무시
 	if (ActualDamage <= 0.0f || CurrentHealth <= 0.0f)
 	{

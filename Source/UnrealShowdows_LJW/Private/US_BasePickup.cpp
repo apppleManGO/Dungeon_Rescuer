@@ -34,6 +34,8 @@ void AUS_BasePickup::BeginPlay()
 void AUS_BasePickup::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!HasAuthority()) return;
+
 	if(const auto Character = Cast<AUS_Character>(OtherActor))
 	{
 		Pickup(Character);
@@ -56,4 +58,3 @@ void AUS_BasePickup::Pickup_Implementation(class AUS_Character* OwningCharacter)
 //AActor 클래스에서 상속된 함수로 소유자를 설정하는 함수
 	SetOwner(OwningCharacter);
 }
-
