@@ -313,7 +313,7 @@ void AUS_Character::Interact_Server_Implementation()
 	{
 		// 상호작용 시작 (I키 누름)
 		// NPC일 경우 대화 중 상태로 진입
-		if (InteractableActor->GetName().ToLower().Contains(TEXT("npc")))
+		if (InteractableActor->ActorHasTag(FName("NPC")))
 		{
 			bIsTalking = true;
 			HideDialogueUI_Client(); // 대화가 시작되었으니 '상호작용 [I]' UI는 숨김
