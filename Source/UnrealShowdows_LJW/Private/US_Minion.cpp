@@ -94,6 +94,13 @@ AUS_Minion::AUS_Minion()
 void AUS_Minion::BeginPlay()
 {
 	Super::BeginPlay();
+	if (HasAuthority())
+	{
+		if (AUS_GameMode* GameMode = Cast<AUS_GameMode>(GetWorld()->GetAuthGameMode()))
+		{
+			GameMode->RegisterMinion(this);
+		}
+	}
 	// 메쉬가 가진 모든 머티리얼 슬롯을 순회하며 동적 인스턴스 생성
 	int32 NumMaterials = GetMesh()->GetNumMaterials();
 	for (int32 i = 0; i < NumMaterials; ++i)
@@ -111,6 +118,19 @@ void AUS_Minion::BeginPlay()
 	}
 	// 시작 시 순찰 위치 지정
 	SetNextPatrolLocation();
+}
+
+void AUS_Minion::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (HasAuthority())
+	{
+		if (AUS_GameMode* GameMode = Cast<AUS_GameMode>(GetWorld()->GetAuthGameMode()))
+		{
+			GameMode->UnregisterMinion(this);
+		}
+	}
+
+	Super::EndPlay(EndPlayReason);
 }
 //소리들었을때 호출 하는함수
 void AUS_Minion::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume)
@@ -136,6 +156,7 @@ void AUS_Minion::OnDamage(AActor* DamagedActor, float Damage, const UDamageType*
         if (GetController())
         {
             GetController()->StopMovement();
+			ActiveChaseTarget = nullptr;
         }
 
         // 넉백 방향 계산 (나를 때린 놈의 반대 방향으로)
@@ -170,6 +191,7 @@ void AUS_Minion::OnDamage(AActor* DamagedActor, float Damage, const UDamageType*
 	if (GetController())
 	{
 		GetController()->StopMovement();
+		ActiveChaseTarget = nullptr;
 		GetController()->UnPossess();
 	}
 	GetCharacterMovement()->DisableMovement();
@@ -295,7 +317,11 @@ void AUS_Minion::Tick(float DeltaTime)
 			AttemptAttack(TargetPlayer);
             
 			// 공격 중에는 이동 중지 (선택 사항)
-			GetController()->StopMovement();
+			if (GetController())
+			{
+				GetController()->StopMovement();
+				ActiveChaseTarget = nullptr;
+			}
 		}
 		// 4. 공격 범위 밖이지만 시야/추격 범위 내에 있는가?
 		else if (DistanceToPlayer <= ChaseRadius)
@@ -307,6 +333,7 @@ void AUS_Minion::Tick(float DeltaTime)
 		{
 			// 5. 플레이어가 범위를 완전히 벗어남 -> 타겟 상실 및 순찰 복귀
 			TargetPlayer = nullptr;
+			ActiveChaseTarget = nullptr;
 			SetNextPatrolLocation();
 		}
 	}
@@ -345,6 +372,7 @@ void AUS_Minion::OnPawnDetected(APawn* Pawn)
 
 void AUS_Minion::GoToLocation(const FVector& Location)
 {
+	ActiveChaseTarget = nullptr;
 	PatrolLocation = Location;
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(),PatrolLocation);
 }
@@ -370,16 +398,27 @@ void AUS_Minion::SetNextPatrolLocation()
 // 추격 로직
 void AUS_Minion::Chase(APawn* Pawn)
 {
-		if(GetLocalRole() != ROLE_Authority)return;
+	if (GetLocalRole() != ROLE_Authority || !Pawn) return;
 	GetCharacterMovement()->MaxWalkSpeed=ChaseSpeed;
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(),Pawn->GetActorLocation());
-	//DrawDebugSphere(GetWorld(),Pawn->GetActorLocation(),25.f,12,FColor::Red,true,10.f,0,2.f);
 
-	if(const auto GameMode = Cast<AUS_GameMode>(GetWorld()->GetAuthGameMode()))
+	if (ActiveChaseTarget != Pawn)
 	{
-		GameMode->AlertMinions(this,Pawn->GetActorLocation(),AlertRadius);
+		if (AAIController* AIController = Cast<AAIController>(GetController()))
+		{
+			AIController->MoveToActor(Pawn, AttackRange * 0.9f);
+			ActiveChaseTarget = Pawn;
+		}
 	}
 
+	const float Now = GetWorld()->GetTimeSeconds();
+	if (Now - LastAlertTime >= AlertCooldown)
+	{
+		LastAlertTime = Now;
+		if (AUS_GameMode* GameMode = Cast<AUS_GameMode>(GetWorld()->GetAuthGameMode()))
+		{
+			GameMode->AlertMinions(this, Pawn->GetActorLocation(), AlertRadius);
+		}
+	}
 }
 void AUS_Minion::AttemptAttack(AActor* InTarget)
 {

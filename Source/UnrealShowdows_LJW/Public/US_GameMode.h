@@ -17,6 +17,8 @@ public:
 	AUS_GameMode();
 	UFUNCTION(BlueprintCallable,Category="Minions")
 	void AlertMinions(class AActor* AlertInstigator, const FVector& Location, const float Radius);
+	void RegisterMinion(class AUS_Minion* Minion);
+	void UnregisterMinion(class AUS_Minion* Minion);
 	UFUNCTION(BlueprintCallable,Category="Gameplay")
 	void CheckAndStartGame();
 	virtual void BeginPlay() override;
@@ -28,4 +30,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Skin")
 	int32 MaxSkinCount = 4; // 데이터테이블 row 수 or 스킨 개수
+
+private:
+	UPROPERTY()
+	TArray<TWeakObjectPtr<class AUS_Minion>> RegisteredMinions;
 };

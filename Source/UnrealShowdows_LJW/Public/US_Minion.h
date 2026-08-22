@@ -89,6 +89,14 @@ private:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Minion AI",meta = (AllowPrivateAccess = "true"))
     float AlertRadius = 6000.f;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Minion AI", meta = (AllowPrivateAccess = "true"))
+    float AlertCooldown = 3.0f;
+
+    float LastAlertTime = -999.f;
+
+    UPROPERTY()
+    TObjectPtr<AActor> ActiveChaseTarget;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Health",meta = (AllowPrivateAccess = "true"))
     float Health = 5.f;
 
@@ -107,6 +115,7 @@ private:
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
     //소리들었을때 호출 하는함수
     UFUNCTION()

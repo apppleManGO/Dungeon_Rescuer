@@ -5,7 +5,6 @@
 #include "US_PlayerController.h"
 #include "US_PlayerState.h"
 #include "US_Minion.h"
-#include "Kismet/GameplayStatics.h"
 #include "US_Character.h"
 #include "UObject/ConstructorHelpers.h"
 #include "US_GameState.h"
@@ -27,20 +26,37 @@ AUS_GameMode::AUS_GameMode()
 
 void AUS_GameMode::AlertMinions(class AActor* AlertInstigator, const FVector& Location, const float Radius)
 {
-	TArray<AActor*> Minions;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AUS_Minion::StaticClass(), Minions);
+	if (!AlertInstigator) return;
 
-	for(const auto Minion : Minions)
+	RegisteredMinions.RemoveAll([](const TWeakObjectPtr<AUS_Minion>& Minion)
 	{
-		if(AlertInstigator ==Minion)continue;
-		if(const auto Distance = FVector::Distance(AlertInstigator->GetActorLocation(), Minion->GetActorLocation());Distance<Radius)
+		return !Minion.IsValid();
+	});
+
+	for (const TWeakObjectPtr<AUS_Minion>& MinionPtr : RegisteredMinions)
+	{
+		AUS_Minion* Minion = MinionPtr.Get();
+		if (!Minion || AlertInstigator == Minion) continue;
+
+		if (FVector::DistSquared(AlertInstigator->GetActorLocation(), Minion->GetActorLocation())
+			< FMath::Square(Radius))
 		{
-			if(const auto MinionCharacter = Cast<AUS_Minion>(Minion))
-			{
-				MinionCharacter->GoToLocation(Location);
-			}
+			Minion->GoToLocation(Location);
 		}
 	}
+}
+
+void AUS_GameMode::RegisterMinion(AUS_Minion* Minion)
+{
+	if (Minion)
+	{
+		RegisteredMinions.AddUnique(Minion);
+	}
+}
+
+void AUS_GameMode::UnregisterMinion(AUS_Minion* Minion)
+{
+	RegisteredMinions.Remove(Minion);
 }
 
 void AUS_GameMode::CheckAndStartGame()
