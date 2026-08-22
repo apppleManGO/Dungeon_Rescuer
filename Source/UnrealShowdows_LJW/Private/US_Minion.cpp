@@ -170,6 +170,12 @@ void AUS_Minion::OnDamage(AActor* DamagedActor, float Damage, const UDamageType*
     // 2. 죽었을 때 (체력이 0 이하)
     // 죽었을 때도 스턴을 걸어서 안 움직이게 확실히 못 박아둡니다.
     bIsStunned = true;
+	if (GetController())
+	{
+		GetController()->StopMovement();
+		GetController()->UnPossess();
+	}
+	GetCharacterMovement()->DisableMovement();
 	//사망 애니메이션
 	if (DeathMontage)
 	{
@@ -219,7 +225,8 @@ void AUS_Minion::OnDamage(AActor* DamagedActor, float Damage, const UDamageType*
        }
     }
 
-    //Destroy();
+	// 사망 연출을 볼 시간을 준 뒤 소멸한다.
+	SetLifeSpan(5.0f);
 }
 void AUS_Minion::RecoverFromStun()
 {
@@ -399,4 +406,3 @@ void AUS_Minion::AttemptAttack(AActor* InTarget)
 
 	//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Minion Attacking Player!"));
 }
-

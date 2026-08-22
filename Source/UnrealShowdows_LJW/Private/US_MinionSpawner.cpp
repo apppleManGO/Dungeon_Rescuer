@@ -33,6 +33,15 @@ void AUS_MinionSpawner::BeginPlay()
 
 void AUS_MinionSpawner::Spawn()
 {
+	if (SpawnableMinions.IsEmpty()) return;
+	if (!HasAuthority()) return;
+
+	SpawnedMinions.RemoveAll([](const TWeakObjectPtr<AUS_Minion>& Minion)
+	{
+		return !Minion.IsValid();
+	});
+	if (SpawnedMinions.Num() >= MaxAliveMinions) return;
+
 	FActorSpawnParameters spawnParams;
 	// 1. 충돌 시 위치를 조정하되 "항상 스폰(AlwaysSpawn)" 하도록 변경
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -50,7 +59,11 @@ void AUS_MinionSpawner::Spawn()
 		   150.0f // <-- 0 대신 높이를 주어 공중에서 떨어지도록 설정
 	   );
 
-	GetWorld()->SpawnActor<AUS_Minion>(Minion, Location, Rotation, spawnParams);
+	AUS_Minion* Spawned = GetWorld()->SpawnActor<AUS_Minion>(Minion, Location, Rotation, spawnParams);
+	if (Spawned)
+	{
+		SpawnedMinions.Add(Spawned);
+	}
 }
 
 // Called every frame
@@ -59,4 +72,3 @@ void AUS_MinionSpawner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-

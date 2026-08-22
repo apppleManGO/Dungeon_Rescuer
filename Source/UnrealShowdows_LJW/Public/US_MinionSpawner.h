@@ -34,9 +34,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn System")
 	int32 NunMinionsAtStart = 2;
 
-
+	// 이 스포너가 동시에 유지할 수 있는 최대 미니언 수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn System")
+	int32 MaxAliveMinions = 8;
 
 private:
+	// 이 스포너가 스폰한 미니언 추적
+	UPROPERTY()
+	TArray<TWeakObjectPtr<class AUS_Minion>> SpawnedMinions;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Spawn System",meta=(AllowPrivateAccess="true"))
 	TObjectPtr<class UBoxComponent> SpawnArea;
 
