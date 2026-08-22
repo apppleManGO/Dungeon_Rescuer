@@ -25,9 +25,7 @@ void AUS_PlayerState::OnRep_IsReady(bool OldValue) const
 {
 	OnReady.Broadcast(bIsReady);
 	// 로그 찍기
-	//UE_LOG(LogTemp, Warning, TEXT("Player %s Ready State Changed: %s"),*GetPlayerName(),bIsReady ? TEXT("READY") : TEXT("NOT READY"));
 	//스크린에 로그찍기
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Player %s Ready: %s"),*GetPlayerName(),bIsReady ? TEXT("READY") : TEXT("NOT READY")));
 }
 
 void AUS_PlayerState::AddXp(int32 Value)
@@ -38,16 +36,11 @@ void AUS_PlayerState::AddXp(int32 Value)
 	//Broadcast 모든 코드에 이 델리게이트 함수와 연관된 모든 코드를 (인자값)을 전달하면서 호출
 	OnXpChange.Broadcast(Value);
 
-	//GEngine->AddOnScreenDebugMessage(0,5.0f,FColor::Yellow,FString::Printf(TEXT("Total Xp: %d"), Value));
-	//UE_LOG(LogTemp, Warning, TEXT("AddXp"));
 	if (const auto Character = Cast<AUS_Character>(GetPawn()))
 	{
 		const FUS_CharacterStats* Stats = Character->GetCharacterStats();
-		//UE_LOG(LogTemp, Warning, TEXT("Character"));
 		if(Stats && Stats->NextLevelXp < Xp)
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("LEVEL UP"));
-			//GEngine->AddOnScreenDebugMessage(3,5.0f,FColor::Red,TEXT("LEVEL UP"));
 
 			CharacterLevel++;
 			Character->UpdateCharacterStats(CharacterLevel);

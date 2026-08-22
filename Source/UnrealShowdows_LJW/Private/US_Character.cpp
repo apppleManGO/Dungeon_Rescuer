@@ -81,20 +81,6 @@ void AUS_Character::BeginPlay()
 	}
 
 	UpdateCharacterStats(1);
-	// if (IsLocallyControlled())
-	// {
-	// 	if (const auto GI = Cast<UUS_GameInstance>(GetGameInstance()))
-	// 	{
-	// 		SetSkinIndex_Server(GI->SkinIndex);
-	// 	}
-	// }
-	//if(IsLocallyControlled())
-	//{
-	//	if(const auto GameInstanceCast = Cast<UUS_GameInstance>(GetWorld()->GetGameInstance());GameInstanceCast!=nullptr)
-	//	{
-	//		SetSkinIndex_Server(GameInstanceCast->SkinIndex);
-	//	}
-	//}
 }
 void AUS_Character::OnRep_PlayerState()
 {
@@ -113,17 +99,6 @@ void AUS_Character::SetSkinIndex_Server_Implementation(int32 NewIndex)
 		PS->SetSkinIndex(NewIndex);
 	}
 }
-
-// void AUS_Character::OnRep_SkinChaged(int32 OldValue)
-// {
-// 	UpdateCharacterSkin();
-// }
-
-// void AUS_Character::SetSkinIndex_Server_Implementation(int32 Value)
-// {
-// 	//SkinIndex = Value;
-// 	UpdateCharacterSkin();
-// }
 
 void AUS_Character::UpdateCharacterSkin(int32 InSkinIndex)
 {
@@ -283,7 +258,6 @@ void AUS_Character::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& 
 void AUS_Character::Move(const struct FInputActionValue& Value)
 {
 	const auto MovementVector = Value.Get<FVector2D>();
-	//GEngine->AddOnScreenDebugMessage(0,5.f,FColor::Yellow,FString::Printf(TEXT("MovementVector: %s"),*MovementVector.ToString()));
 
 	if(Controller != nullptr)
 	{
@@ -301,7 +275,6 @@ void AUS_Character::Move(const struct FInputActionValue& Value)
 void AUS_Character::Look(const FInputActionValue& Value)
 {
 	const auto LookAxisVector = Value.Get<FVector2D>();
-	//GEngine->AddOnScreenDebugMessage(1,5.f,FColor::Green,FString::Printf(TEXT("LookAxisVector: %s"),*LookAxisVector.ToString()));
 
 	if(Controller != nullptr)
 	{
@@ -312,7 +285,6 @@ void AUS_Character::Look(const FInputActionValue& Value)
 
 void AUS_Character::SprintStart(const FInputActionValue& Value)
 {
-	//GEngine->AddOnScreenDebugMessage(2,5.f,FColor::Blue,FString::Printf(TEXT("SprintStart")));
 	if(GetCharacterStats())
 	{
 		GetCharacterMovement()->MaxWalkSpeed=GetCharacterStats()->SprintSpeed;
@@ -322,7 +294,6 @@ void AUS_Character::SprintStart(const FInputActionValue& Value)
 
 void AUS_Character::SprintEnd(const FInputActionValue& Value)
 {
-	//GEngine->AddOnScreenDebugMessage(2,5.f,FColor::Blue,FString::Printf(TEXT("SprintEnd")));
 	if(GetCharacterStats())
 	{
 		GetCharacterMovement()->MaxWalkSpeed=GetCharacterStats()->WalkSpeed;
@@ -332,7 +303,6 @@ void AUS_Character::SprintEnd(const FInputActionValue& Value)
 
 void AUS_Character::Interact(const FInputActionValue& Value)
 {
-	//GEngine->AddOnScreenDebugMessage(3,5.f,FColor::Red,FString::Printf(TEXT("Interact")));
 	Interact_Server();
 	
 }

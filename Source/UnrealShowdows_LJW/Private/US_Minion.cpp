@@ -115,14 +115,12 @@ void AUS_Minion::BeginPlay()
 //소리들었을때 호출 하는함수
 void AUS_Minion::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume)
 {
-	//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Green,"Noise detected");
 	GoToLocation(Location);
 }
 
 void AUS_Minion::OnDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
     Health -= Damage;
-	//UE_LOG(LogTemp, Warning, TEXT("Minion Hit! HP: %f"), Health);
 	// 서버에서만 실행되는 이 함수가 모든 클라이언트에게 "색 바꿔!"라고 명령합니다.
 	MulticastPlayHitFlash();
 
@@ -155,7 +153,6 @@ void AUS_Minion::OnDamage(AActor* DamagedActor, float Damage, const UDamageType*
         // LaunchCharacter의 2, 3번째 인자(true, true)가 기존 이동 속도를 무시하고 
         // 넉백 힘을 새로 덮어씌우기 때문에 연속으로 맞아도 예쁘게 날아갑니다.
         LaunchCharacter(KnockbackDir * KnockbackForce, true, true);
-    	//UE_LOG(LogTemp, Warning, TEXT("LaunchCharacter"));
     	if (HitReactMontage)
     	{
     		PlayAnimMontage(HitReactMontage);
@@ -336,7 +333,6 @@ void AUS_Minion::OnPawnDetected(APawn* Pawn)
 	// 플레이어 캐릭터만 인식
 	if(!Pawn->IsA<AUS_Character>())return;
 	TargetPlayer = Pawn;
-	//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Red,"Character Detected");
 
 	// 추격 속도가 아닐 때만 추격 시작
 	if(GetCharacterMovement()->MaxWalkSpeed!=ChaseSpeed)
@@ -404,5 +400,4 @@ void AUS_Minion::AttemptAttack(AActor* InTarget)
 		UDamageType::StaticClass()
 	);
 
-	//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Minion Attacking Player!"));
 }

@@ -88,13 +88,6 @@ void AUS_GameMode::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("Map [%s] loaded → Phase set to Lobby"), *MapName);
 		}
 	}
-
-	//플레이어 스킨관리
-	const int32 LocalMaxSkinCount = 4;
-	for (int32 i = 0; i < LocalMaxSkinCount; i++)
-	{
-		AvailableSkinIndices.Add(i);
-	}
 }
 void AUS_GameMode::PostLogin(APlayerController* NewPlayer)
 {
@@ -117,14 +110,4 @@ void AUS_GameMode::PostLogin(APlayerController* NewPlayer)
 	TEXT("[PS] %s SkinIndex = %d (Role=%d)"),
 	*GetName(), SkinIndex, (int32)GetLocalRole());
 	}
-	// if (AvailableSkinIndices.Num() == 0) return;
-	//
-	// const int32 RandIdx = FMath::RandRange(0, AvailableSkinIndices.Num() - 1);
-	// const int32 SkinIndex = AvailableSkinIndices[RandIdx];
-	// AvailableSkinIndices.RemoveAt(RandIdx);
-	//
-	// if (AUS_PlayerState* PS = NewPlayer->GetPlayerState<AUS_PlayerState>())
-	// {
-	// 	PS->SetSkinIndex(SkinIndex);
-	// }
 }

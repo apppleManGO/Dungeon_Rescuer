@@ -23,10 +23,6 @@ public:
 	
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
-	//플레이어 스킨관리
-	UPROPERTY()
-	TArray<int32> AvailableSkinIndices;
-
 	UPROPERTY()
 	int32 NextSkinIndex = 0;
 

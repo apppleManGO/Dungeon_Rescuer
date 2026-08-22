@@ -114,15 +114,3 @@ void AUS_GameState::Multicast_OnAllNPCsRescued_Implementation(FVector SpawnLocat
 {
 	UE_LOG(LogTemp, Log, TEXT("All NPCs rescued. Escape portal at %s"), *SpawnLocation.ToString());
 }
-// AUS_GameState.cpp 내부 예시 함수
-int32 AUS_GameState::GetAlivePlayerCount() const
-{
-	int32 AliveCount = 0;
-	for (APlayerState* PS : PlayerArray)
-	{
-		// PlayerState나 Character에 bIsDead 같은 변수가 있다면 체크
-		// AUS_PlayerState* MyPS = Cast<AUS_PlayerState>(PS);
-		// if (MyPS && !MyPS->bIsDead) AliveCount++;
-	}
-	return AliveCount;
-}

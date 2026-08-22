@@ -80,13 +80,6 @@ protected:
 	void SprintStart_Client();
 	UFUNCTION(NetMulticast,Reliable)
 	void SprintEnd_Client();
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,ReplicatedUsing="OnRep_SkinChaged",Category="Skin")
-	//int32 SkinIndex=-1;
-
-	//UFUNCTION()
-	//void OnRep_SkinChaged();
-	// UFUNCTION(Server,Reliable)
-	// void SetSkinIndex_Server(int32 Value);
 	UFUNCTION()
 	void UpdateCharacterSkin(int32 InSkinIndex);
 

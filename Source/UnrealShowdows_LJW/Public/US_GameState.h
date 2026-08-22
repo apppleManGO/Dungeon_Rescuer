@@ -13,8 +13,7 @@ UENUM(BlueprintType)
 enum class EGamePhase : uint8
 {
 	Lobby,
-	Playing,
-	GameOver
+	Playing
 };
 UCLASS()
 class UNREALSHOWDOWS_LJW_API AUS_GameState : public AGameState
@@ -48,8 +47,6 @@ public:
 	bool ConsumePartyPrisonKey();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	int32 GetAlivePlayerCount() const;
-
 	// 이번 스테이지에서 구조해야 할 총 NPC 수 (에디터에서 설정 가능)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
 	int32 TotalNPCsToRescue = 3;
@@ -79,8 +76,4 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Quest")
 	void BP_OnAllNpCsRescued(FVector SpawnLocation);
-	
-	//플레이어 수 확인
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 TotalPlayers = PlayerArray.Num();
 };

@@ -12,15 +12,12 @@ void AUS_PlayerController::UpdateUIForPhase(EGamePhase NewPhase)
 {
     if (!IsLocalController())
     {
-        //UE_LOG(LogTemp, Warning, TEXT("UpdateUIForPhase skipped: Not a local controller"));
         return; 
     }
 
-    //UE_LOG(LogTemp, Warning, TEXT("UpdateUIForPhase called. Phase = %d"), (int32)NewPhase);
 
     if (NewPhase == EGamePhase::Lobby)
     {
-        //UE_LOG(LogTemp, Warning, TEXT("Phase = Lobby"));
 
         if (ReadyWidgetClass && !ReadyWidget)
         {
@@ -35,7 +32,6 @@ void AUS_PlayerController::UpdateUIForPhase(EGamePhase NewPhase)
                     if(!MyGI->bIsMainQuestCleared==true)
                     {
                          ReadyWidget->AddToViewport();
-                         //UE_LOG(LogTemp, Warning, TEXT("ReadyWidget created and added to viewport"));
                     }
                     
                 }
@@ -43,52 +39,43 @@ void AUS_PlayerController::UpdateUIForPhase(EGamePhase NewPhase)
             }
             else
             {
-                //UE_LOG(LogTemp, Error, TEXT("CreateWidget returned nullptr (ReadyWidgetClass invalid?)"));
             }
         }
 
         if (ReadyWidget)
         {
             ReadyWidget->SetVisibility(ESlateVisibility::Visible);
-            //UE_LOG(LogTemp, Warning, TEXT("ReadyWidget set to Visible"));
         }
 
         if (GameWidget)
         {
             GameWidget->SetVisibility(ESlateVisibility::Collapsed);
-            //UE_LOG(LogTemp, Warning, TEXT("GameWidget set to Collapsed"));
         }
     }
     else if (NewPhase == EGamePhase::Playing)
     {
-        //UE_LOG(LogTemp, Warning, TEXT("Phase = Playing"));
 
         if (GameWidgetClass && !GameWidget)
         {
-            //UE_LOG(LogTemp, Warning, TEXT("Creating GameWidget..."));
 
             GameWidget = CreateWidget<UUserWidget>(this, GameWidgetClass);
             if (GameWidget)
             {
                 GameWidget->AddToViewport();
-                //UE_LOG(LogTemp, Warning, TEXT("GameWidget created and added to viewport"));
             }
             else
             {
-                //UE_LOG(LogTemp, Error, TEXT("CreateWidget returned nullptr (GameWidgetClass invalid?)"));
             }
         }
 
         if (GameWidget)
         {
             GameWidget->SetVisibility(ESlateVisibility::Visible);
-            //UE_LOG(LogTemp, Warning, TEXT("GameWidget set to Visible"));
         }
 
         if (ReadyWidget)
         {
             ReadyWidget->SetVisibility(ESlateVisibility::Collapsed);
-            //UE_LOG(LogTemp, Warning, TEXT("ReadyWidget set to Collapsed"));
         }
     }
 }
@@ -103,22 +90,18 @@ void AUS_PlayerController::OnRep_PlayerState()
 		PS->OnCharacterLevelUp.AddDynamic(this, &AUS_PlayerController::HandleLevelUp);
 		PS->OnReady.AddDynamic(this, &AUS_PlayerController::HandleReady);
 
-		//UE_LOG(LogTemp, Warning, TEXT("PlayerController: Bound to PlayerState events for %s"), *PS->GetPlayerName());
 	}
 }
 void AUS_PlayerController::HandleXpChange(int32 NewXp)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("XP Changed: %d"), NewXp);
 }
 
 void AUS_PlayerController::HandleLevelUp(int32 NewLevel)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Level Up! New Level: %d"), NewLevel);
 }
 
 void AUS_PlayerController::HandleReady(bool bIsReady)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Ready State: %s"), bIsReady ? TEXT("READY") : TEXT("NOT READY"));
 }
 
 void AUS_PlayerController::Client_StartFadeOut_Implementation()
@@ -157,7 +140,6 @@ void AUS_PlayerController::BeginPlay()
 
     if (AUS_GameState* GS = GetWorld()->GetGameState<AUS_GameState>())
     {
-        //UE_LOG(LogTemp, Warning, TEXT("PlayerController BeginPlay → Sync UI with CurrentPhase = %d"), (int32)GS->CurrentPhase);
         UpdateUIForPhase(GS->CurrentPhase);
     }
 }
