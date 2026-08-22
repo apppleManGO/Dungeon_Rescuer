@@ -86,9 +86,9 @@ void AUS_PlayerController::OnRep_PlayerState()
 	if (AUS_PlayerState* PS = GetPlayerState<AUS_PlayerState>())
 	{
 		// PlayerState 이벤트 바인딩
-		PS->OnXpChange.AddDynamic(this, &AUS_PlayerController::HandleXpChange);
-		PS->OnCharacterLevelUp.AddDynamic(this, &AUS_PlayerController::HandleLevelUp);
-		PS->OnReady.AddDynamic(this, &AUS_PlayerController::HandleReady);
+		PS->OnXpChange.AddUniqueDynamic(this, &AUS_PlayerController::HandleXpChange);
+		PS->OnCharacterLevelUp.AddUniqueDynamic(this, &AUS_PlayerController::HandleLevelUp);
+		PS->OnReady.AddUniqueDynamic(this, &AUS_PlayerController::HandleReady);
 
 	}
 }
