@@ -58,6 +58,10 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_RescuedNPCCount, BlueprintReadOnly, Category = "Quest")
 	int32 RescuedNPCCount = 0;
 
+	// 모든 NPC 구출 시 탈출 포탈이 생성될 위치
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
+	FVector EscapePortalLocation = FVector(-445.56f, -3613.61f, -1.90f);
+
 	// NPC 구조 시 서버에서 호출할 함수
 	UFUNCTION(BlueprintCallable, Category = "Quest")
 	void AddRescuedNPC();

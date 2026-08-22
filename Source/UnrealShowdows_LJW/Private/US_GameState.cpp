@@ -85,22 +85,15 @@ bool AUS_GameState::ConsumePartyPrisonKey()
 }
 void AUS_GameState::AddRescuedNPC()
 {
-	if (!HasAuthority()) return; // 서버에서만 실행
+	if (!HasAuthority()) return;
 
 	RescuedNPCCount++;
-    
-	// 서버에서도 OnRep 함수를 직접 호출하여 로직 실행 (서버 UI 등)
 	OnRep_RescuedNPCCount();
 
 	if (IsAllNPCsRescued())
 	{
-		// 알려주신 정확한 좌표 설정 (Z값은 지면 높이에 맞춰 살짝 조정할 수 있습니다)
-		FVector TargetLocation = FVector(-445.56f, -3613.61f, -1.90f);
-        
-		// 모든 클라이언트에게 이 좌표에 포탈을 만들라고 명령
-		BP_OnAllNpCsRescued(TargetLocation);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, TEXT("All NPCs Rescued! Go back to Guild."));
-		// 여기에 탈출구 활성화 등 이벤트를 추가할 수 있습니다.
+		BP_OnAllNpCsRescued(EscapePortalLocation);
+		Multicast_OnAllNPCsRescued(EscapePortalLocation);
 	}
 }
 void AUS_GameState::OnRep_RescuedNPCCount()
@@ -119,12 +112,7 @@ void AUS_GameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 }
 void AUS_GameState::Multicast_OnAllNPCsRescued_Implementation(FVector SpawnLocation)
 {
-	// 이 함수 내부의 로직은 서버와 모든 클라이언트에서 동시에 실행됩니다.
-    
-	// 1. 화면 메시지 출력 (Blueprint에서 이 이벤트를 바인딩해 처리할 수도 있습니다)
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("모든 생존자를 구출했습니다! 탈출 포탈이 열립니다!"));
-
-	// 2. 블루프린트에서 포탈 스폰 로직을 실행하기 위한 'Delegate'나 'Event'를 호출할 수 있습니다.
+	UE_LOG(LogTemp, Log, TEXT("All NPCs rescued. Escape portal at %s"), *SpawnLocation.ToString());
 }
 // AUS_GameState.cpp 내부 예시 함수
 int32 AUS_GameState::GetAlivePlayerCount() const
