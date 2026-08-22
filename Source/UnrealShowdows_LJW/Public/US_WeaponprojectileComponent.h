@@ -27,7 +27,12 @@ protected:
 
 	UFUNCTION(NetMulticast,Unreliable)
 	void Throw_Client();
+
+	UFUNCTION()
+	void SpawnProjectile();
 private:
+	FTimerHandle ThrowTimerHandle;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category = "Projectile",meta=(AllowPrivateAccess="true"))
 	TSubclassOf<class AUS_BaseWeaponProjectile> ProjectileClass;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category = "Input",meta=(AllowPrivateAccess="true"))
