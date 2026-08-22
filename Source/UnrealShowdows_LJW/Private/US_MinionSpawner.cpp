@@ -9,7 +9,7 @@
 AUS_MinionSpawner::AUS_MinionSpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	SpawnArea = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnArea"));
 	SpawnArea->SetupAttachment(RootComponent);
