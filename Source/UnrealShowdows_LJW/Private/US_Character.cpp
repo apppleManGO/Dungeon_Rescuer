@@ -223,13 +223,17 @@ void AUS_Character::UpdateCharacterStats(int32 CharacterLevel)
 		if (CharacterStatsRows.Num() > 0)
 		{
 			const auto NewCharacterLevel  = FMath::Clamp(CharacterLevel,1,CharacterStatsRows.Num());
-			CharacterStats = CharacterStatsRows[NewCharacterLevel -1];
+			const FUS_CharacterStats* StatsRow = CharacterStatsRows[NewCharacterLevel - 1];
+			if (!StatsRow) return;
 
-			GetCharacterMovement()->MaxWalkSpeed=GetCharacterStats()->WalkSpeed;
+			CharacterStats = *StatsRow;
+			bStatsLoaded = true;
+
+			GetCharacterMovement()->MaxWalkSpeed = CharacterStats.WalkSpeed;
 
 			// [추가] 데이터 테이블에 MaxHealth가 있다면 가져오고, 아니면 기본값 사용
 			// 만약 FUS_CharacterStats 구조체 안에 MaxHealth 변수가 있다면 아래 주석 해제하여 사용
-			 MaxHealth = GetCharacterStats()->MaxHealth; 
+			MaxHealth = CharacterStats.MaxHealth;
             
 			// 레벨업/초기화 시 체력을 최대치로 회복
 			CurrentHealth = MaxHealth;

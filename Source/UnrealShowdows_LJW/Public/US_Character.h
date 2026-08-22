@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Character.h"
+#include "US_CharacterStats.h"
 #include "US_Character.generated.h"
 
 UCLASS()
@@ -36,7 +37,8 @@ private:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Character Data",meta=(AllowPrivateAccess=true))
 	class UDataTable* CharacterDataTable;
 
-	struct FUS_CharacterStats* CharacterStats;
+	FUS_CharacterStats CharacterStats;
+	bool bStatsLoaded = false;
 
 	UPROPERTY()
 	AActor* InteractableActor;
@@ -49,10 +51,6 @@ private:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Character Data",meta=(AllowPrivateAccess=true))
 	UDataTable* CharacterSkinDataTable;
-
-	struct FUS_CharacterSkins* CharacterSkin;
-
-	
 
 protected:
 	// Called when the game starts or when spawned
@@ -119,9 +117,8 @@ public:
 	// 함수 호출 오버헤드를 줄여 성능을 최적화할 수 있습니다.
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const {return CameraBoom;}
 	FORCEINLINE UCameraComponent* GetFollowCamera() const{return FollowCamera;}
-	FORCEINLINE FUS_CharacterStats* GetCharacterStats() const {return CharacterStats;}
+	FORCEINLINE const FUS_CharacterStats* GetCharacterStats() const {return bStatsLoaded ? &CharacterStats : nullptr;}
 	FORCEINLINE UUS_WeaponprojectileComponent* GetWeapon() const {return Weapon;}
-	FORCEINLINE FUS_CharacterSkins* GetCharacterSkins() const {return CharacterSkin;}
 	FORCEINLINE UDataTable* GetCharacterSkinDataTable() const {return CharacterSkinDataTable;}
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Camera",meta=(AllowPrivateAccess=true))

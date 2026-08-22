@@ -48,12 +48,13 @@ void AUS_MainMenuPawn::RandomizeCharacterSkin()
 		if(CharacterSkinRows.Num()>0)
 		{
 			const auto NewIndex = FMath::RandRange(0, CharacterSkinRows.Num() - 1);
-			CharacterSkin = CharacterSkinRows[NewIndex];
+			const FUS_CharacterSkins* Skin = CharacterSkinRows[NewIndex];
+			if (!Skin) return;
 
-			Mesh->SetMaterial(4,CharacterSkinRows[NewIndex]->Material4);
-			Mesh->SetMaterial(0,CharacterSkinRows[NewIndex]->Material0);
-			Mesh->SetMaterial(1,CharacterSkinRows[NewIndex]->Material1);
-			Mesh->SetMaterial(2,CharacterSkinRows[NewIndex]->Material2);
+			Mesh->SetMaterial(4, Skin->Material4);
+			Mesh->SetMaterial(0, Skin->Material0);
+			Mesh->SetMaterial(1, Skin->Material1);
+			Mesh->SetMaterial(2, Skin->Material2);
 		}
 	}
 }

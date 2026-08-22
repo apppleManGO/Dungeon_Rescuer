@@ -24,7 +24,6 @@ public:
 	FORCEINLINE UArrowComponent* GetArrow() const { return Arrow; }
 	FORCEINLINE UCameraComponent* GetCamera() const { return Camera; }
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
-	FORCEINLINE FUS_CharacterSkins* GetCharacterSkins() const { return CharacterSkin; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,6 +39,4 @@ public:
 	private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Data", meta = (AllowPrivateAccess = "true"))
 	class UDataTable* CharacterSkinDataTable;
-	
-	struct FUS_CharacterSkins* CharacterSkin;
 };
