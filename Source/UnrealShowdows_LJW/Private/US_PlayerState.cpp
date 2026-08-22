@@ -58,7 +58,7 @@ void AUS_PlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME(AUS_PlayerState, SkinIndex);
 	DOREPLIFETIME_CONDITION(AUS_PlayerState,Xp,COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(AUS_PlayerState,CharacterLevel,COND_OwnerOnly);
-	DOREPLIFETIME_CONDITION(AUS_PlayerState,bIsReady,COND_OwnerOnly);
+	DOREPLIFETIME(AUS_PlayerState, bIsReady);
 }
 void AUS_PlayerState::SetSkinIndex(int32 NewIndex)
 {
