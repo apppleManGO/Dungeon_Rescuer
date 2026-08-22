@@ -89,6 +89,10 @@ protected:
 	// [추가] 최대 체력 (기본값 100)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth = 100.0f;
+
+	// 사망 처리 중복 방지 (서버 권위)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = "Health")
+	bool bIsDead = false;
 	
 	UFUNCTION()
 	void OnRep_CurrentHealth();

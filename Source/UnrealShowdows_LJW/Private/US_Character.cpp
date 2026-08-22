@@ -288,6 +288,7 @@ void AUS_Character::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AUS_Character, CurrentHealth);
+	DOREPLIFETIME(AUS_Character, bIsDead);
 	//DOREPLIFETIME(AUS_Character, SkinIndex);
 }
 
@@ -482,28 +483,28 @@ void AUS_Character::EndDialogue()
 
 void AUS_Character::Die()
 {
-	// 이미 죽은 상태면 중복 실행 방지
-	// (별도의 bool bIsDead 변수를 두어 체크하는 것이 더 안전합니다)
-    
+	if (bIsDead) return;
+	bIsDead = true;
+
 	UE_LOG(LogTemp, Warning, TEXT("Player Died!"));
 
-	// 예시: 입력 막기
 	if (APlayerController* PC = Cast<APlayerController>(Controller))
 	{
 		DisableInput(PC);
 	}
 
-	// 예시: 캡슐 콜리전 끄기 (시체 위로 지나갈 수 있게)
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+
 	if (DeathMontage)
 	{
 		PlayAnimMontage(DeathMontage);
 	}
 	else
-	// 예시: 래그돌(Ragdoll) 실행
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	{
+		// 사망 몽타주가 없을 때만 래그돌
+		GetMesh()->SetSimulatePhysics(true);
+		GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	}
 }
 // 체력이 변경될 때 클라이언트에서 호출됨 (UI 업데이트 등에 사용)
 void AUS_Character::OnRep_CurrentHealth()
