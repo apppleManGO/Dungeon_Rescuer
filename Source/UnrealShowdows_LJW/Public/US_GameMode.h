@@ -21,7 +21,7 @@ public:
 	void CheckAndStartGame();
 	virtual void BeginPlay() override;
 	
-	void PostLogin(APlayerController* NewPlayer);
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 	//플레이어 스킨관리
 	UPROPERTY()
