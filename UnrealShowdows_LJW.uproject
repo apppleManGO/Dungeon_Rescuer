@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.4",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "UnrealShowdows_LJW",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
