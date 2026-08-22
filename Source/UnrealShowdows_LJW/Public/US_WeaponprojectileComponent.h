@@ -36,6 +36,13 @@ private:
 	class UInputAction* ThrowAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category = "Projectile",meta=(AllowPrivateAccess="true"))
 	UAnimMontage* ThrowAnimation;
+
+	// 투척 쿨다운 (초)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile", meta=(AllowPrivateAccess="true"))
+	float ThrowCooldown = 0.8f;
+
+	// 마지막 투척 시각 (서버 기준)
+	float LastThrowTime = -999.f;
 	
 public:	
 	// Called every frame

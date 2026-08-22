@@ -44,6 +44,7 @@ AUS_BaseWeaponProjectile::AUS_BaseWeaponProjectile()
 	ProjectileMovement->bShouldBounce=false;
 
 	bReplicates = true;
+	InitialLifeSpan = 5.0f;
 }
 
 // Called when the game starts or when spawned

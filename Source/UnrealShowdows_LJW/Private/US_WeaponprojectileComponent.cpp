@@ -32,7 +32,7 @@ void UUS_WeaponprojectileComponent::BeginPlay()
 		}
 		if(UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
 		{
-			EnhancedInputComponent->BindAction(ThrowAction,ETriggerEvent::Triggered,this,&UUS_WeaponprojectileComponent::Throw);
+			EnhancedInputComponent->BindAction(ThrowAction,ETriggerEvent::Started,this,&UUS_WeaponprojectileComponent::Throw);
 		}
 	}
 	// ...
@@ -58,6 +58,10 @@ void UUS_WeaponprojectileComponent::Throw_Client_Implementation()
 
 void UUS_WeaponprojectileComponent::Throw_Server_Implementation()
 {
+	const float Now = GetWorld()->GetTimeSeconds();
+	if (Now - LastThrowTime < ThrowCooldown) return;
+	LastThrowTime = Now;
+
 	if(ProjectileClass)
 	{
 		Throw_Client();
@@ -90,4 +94,3 @@ void UUS_WeaponprojectileComponent::SetProjectileClass(TSubclassOf<class AUS_Bas
 {
 	ProjectileClass = NewProjectileClass;
 }
-
