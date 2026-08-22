@@ -15,10 +15,6 @@ class UNREALSHOWDOWS_LJW_API UUS_GameInstance : public UGameInstance
 	GENERATED_BODY()
 	public:
 
-	UPROPERTY(EditDefaultsOnly)
-	int32 MaxSkinCount = 6;
-	UPROPERTY(BlueprintReadWrite)
-	int32 SkinIndex = 0;
 	// 메인 퀘스트(모든 NPC 구출)를 완료했는지 여부
 	UPROPERTY(BlueprintReadWrite, Category = "Quest")
 	bool bIsMainQuestCleared = false;

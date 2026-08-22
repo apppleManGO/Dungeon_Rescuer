@@ -28,9 +28,6 @@ public:
 	UPROPERTY()
 	int32 NextSkinIndex = 0;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Skin")
-	int32 MaxSkinCount = 4; // 데이터테이블 row 수 or 스킨 개수
-
 private:
 	UPROPERTY()
 	TArray<TWeakObjectPtr<class AUS_Minion>> RegisteredMinions;

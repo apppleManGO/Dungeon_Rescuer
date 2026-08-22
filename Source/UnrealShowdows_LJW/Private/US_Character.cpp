@@ -11,7 +11,6 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "US_GameInstance.h"
 #include "US_CharacterSkins.h"
 #include "US_PlayerState.h"
 #include "Net/UnrealNetwork.h"

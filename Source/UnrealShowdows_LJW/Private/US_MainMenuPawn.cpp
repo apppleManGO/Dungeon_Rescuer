@@ -3,7 +3,6 @@
 
 #include "US_MainMenuPawn.h"
 #include "US_CharacterSkins.h"
-#include "US_GameInstance.h"
 #include "Components/ArrowComponent.h"
 #include "Camera/CameraComponent.h"
 
@@ -55,11 +54,6 @@ void AUS_MainMenuPawn::RandomizeCharacterSkin()
 			Mesh->SetMaterial(0,CharacterSkinRows[NewIndex]->Material0);
 			Mesh->SetMaterial(1,CharacterSkinRows[NewIndex]->Material1);
 			Mesh->SetMaterial(2,CharacterSkinRows[NewIndex]->Material2);
-
-			if(const auto GameInstance = Cast<UUS_GameInstance>(GetGameInstance()))
-			{
-				//GameInstance->SkinIndex=NewIndex;
-			}
 		}
 	}
 }
@@ -77,4 +71,3 @@ void AUS_MainMenuPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-

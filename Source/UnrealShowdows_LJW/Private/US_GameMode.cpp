@@ -9,6 +9,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "US_GameState.h"
 #include "Net/UnrealNetwork.h"
+#include "Engine/DataTable.h"
 
 AUS_GameMode::AUS_GameMode()
 {
@@ -108,16 +109,23 @@ void AUS_GameMode::BeginPlay()
 void AUS_GameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
-	const int32 SkinIndex = NextSkinIndex;
 
-	// 다음 플레이어를 위해 증가
-	NextSkinIndex++;
+	const AUS_Character* DefaultCharacter = DefaultPawnClass
+		? Cast<AUS_Character>(DefaultPawnClass->GetDefaultObject())
+		: nullptr;
+	const UDataTable* SkinDataTable = DefaultCharacter
+		? DefaultCharacter->GetCharacterSkinDataTable()
+		: nullptr;
+	const int32 SkinCount = SkinDataTable ? SkinDataTable->GetRowMap().Num() : 0;
 
-	// 스킨 개수 초과 시 다시 0부터 (원하면 제거 가능)
-	if (NextSkinIndex >= MaxSkinCount)
+	if (SkinCount <= 0)
 	{
-		NextSkinIndex = 0;
+		UE_LOG(LogTemp, Warning, TEXT("Character skin DataTable is missing or empty."));
+		return;
 	}
+
+	const int32 SkinIndex = NextSkinIndex;
+	NextSkinIndex = (NextSkinIndex + 1) % SkinCount;
 
 	if (AUS_PlayerState* PS = NewPlayer->GetPlayerState<AUS_PlayerState>())
 	{

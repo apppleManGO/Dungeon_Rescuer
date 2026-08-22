@@ -122,6 +122,7 @@ public:
 	FORCEINLINE FUS_CharacterStats* GetCharacterStats() const {return CharacterStats;}
 	FORCEINLINE UUS_WeaponprojectileComponent* GetWeapon() const {return Weapon;}
 	FORCEINLINE FUS_CharacterSkins* GetCharacterSkins() const {return CharacterSkin;}
+	FORCEINLINE UDataTable* GetCharacterSkinDataTable() const {return CharacterSkinDataTable;}
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Camera",meta=(AllowPrivateAccess=true))
 	TObjectPtr<class USpringArmComponent> CameraBoom;
