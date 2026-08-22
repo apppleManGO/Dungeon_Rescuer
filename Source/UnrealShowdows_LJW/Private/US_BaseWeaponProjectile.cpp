@@ -6,7 +6,6 @@
 #include "US_CharacterStats.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "DataWrappers/ChaosVDParticleDataWrapper.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 
