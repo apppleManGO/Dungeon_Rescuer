@@ -57,6 +57,14 @@ private:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// 상호작용 탐색 주기 (초)
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float InteractionCheckInterval = 0.15f;
+
+	float LastInteractionCheckTime = 0.f;
+	bool bInteractPromptVisible = false;
+
 	void Move(const struct FInputActionValue& Value);
 	void Look(const  FInputActionValue& Value);
 	void SprintStart(const  FInputActionValue& Value);

@@ -149,81 +149,68 @@ void AUS_Character::UpdateCharacterSkin(int32 InSkinIndex)
 void AUS_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//GetLocalRole 현재 인스턴스(서버 or 클라)에서의 이 액터의 역할
-	//서버 권한 (즉, 진짜 객체가 있음)이 아니라먄 리턴하기
+
 	if (GetLocalRole() != ROLE_Authority) return;
 
-	// ▼ 1. 대화 중이면 아예 트레이스(탐색)를 할 필요 없이 UI를 숨깁니다.
-	if (bIsTalking)
+	if (GetCharacterStats())
 	{
-		InteractableActor = nullptr;
-		HideDialogueUI_Client();
-		return; // 아래 트레이스 로직 생략
-	}
-
-	// ▼ 2. 대화 중이 아닐 때만 앞을 탐색합니다.
-	FHitResult HitResult;
-	FCollisionQueryParams QueryParams;
-	QueryParams.bTraceComplex = true;
-	QueryParams.AddIgnoredActor(this);
-
-	auto SphereRadius = 50.f;
-	auto StartLocation = GetActorLocation() + GetActorForwardVector() * 150.f;
-	auto EndLocation = GetActorLocation() + GetActorForwardVector() * 500.f;
-
-	bool bIsHit = UKismetSystemLibrary::SphereTraceSingle(
-	   GetWorld(), StartLocation, EndLocation, SphereRadius,
-	   UEngineTypes::ConvertToTraceType(ECC_WorldStatic), false,
-	   TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true
-	);
-
-	if (bIsHit && HitResult.GetActor())
-	{
-		AActor* HitActor = HitResult.GetActor();
-
-		if (HitActor->GetClass()->ImplementsInterface(UUS_Interactable::StaticClass()))
-		{
-			InteractableActor = HitActor;
-
-			// ▼ 1. 화면에 내가 지금 쳐다보고 있는 액터의 진짜 이름을 띄웁니다 (노란색)
-			//GEngine->AddOnScreenDebugMessage(11, 0.1f, FColor::Yellow, FString::Printf(TEXT("Hit Target: %s"), *HitActor->GetName()));
-
-			if (HitActor->ActorHasTag(FName("NPC")) || HitActor->ActorHasTag(FName("Door"))){
-				// ▼ 2. 태그가 정상적으로 확인되면 초록색 메시지 출력
-				//GEngine->AddOnScreenDebugMessage(12, 0.1f, FColor::Green, TEXT("Tag Check: SUCCESS!"));
-				ShowDialogueUI_Client();
-			}
-			else
-			{
-				// ▼ 3. 태그가 없으면 빨간색 메시지 출력
-				//GEngine->AddOnScreenDebugMessage(12, 0.1f, FColor::Red, TEXT("Tag Check: FAILED! (No NPC Tag)"));
-				HideDialogueUI_Client();
-			}
-		}
-	}
-	else
-	{
-		InteractableActor = nullptr;
-		HideDialogueUI_Client(); // 아무것도 없으면 UI 숨김
-	}
-	if (GetLocalRole() == ROLE_Authority) // 1. 서버인지 확인
-	{
-		// 2. 현재 달리기 속도 설정인가? && 3. 실제로 이동 중인가?
-		bool bIsSprinting = (GetCharacterMovement()->MaxWalkSpeed == GetCharacterStats()->SprintSpeed);
-		bool bIsMoving = (GetVelocity().Size() > 0.f);
-
+		const bool bIsSprinting = GetCharacterMovement()->MaxWalkSpeed == GetCharacterStats()->SprintSpeed;
+		const bool bIsMoving = GetVelocity().Size() > 0.f;
 		if (bIsSprinting && bIsMoving)
 		{
 			float NoiseMagnitude = 1.0f;
-        
-			// 4. 스텔스 배율 적용 (0으로 나누기 방지)
 			if (GetCharacterStats()->StealthMultiplier > 0.f)
 			{
 				NoiseMagnitude /= GetCharacterStats()->StealthMultiplier;
 			}
-
-			// 5. 소리 발생
 			NoiseEmitter->MakeNoise(this, NoiseMagnitude, GetActorLocation());
+		}
+	}
+
+	const float Now = GetWorld()->GetTimeSeconds();
+	if (Now - LastInteractionCheckTime < InteractionCheckInterval) return;
+	LastInteractionCheckTime = Now;
+
+	AActor* FoundInteractable = nullptr;
+	bool bShouldShowPrompt = false;
+
+	if (!bIsTalking)
+	{
+		FHitResult HitResult;
+		FCollisionQueryParams QueryParams;
+		QueryParams.bTraceComplex = true;
+		QueryParams.AddIgnoredActor(this);
+
+		const float SphereRadius = 50.f;
+		const FVector StartLocation = GetActorLocation() + GetActorForwardVector() * 150.f;
+		const FVector EndLocation = GetActorLocation() + GetActorForwardVector() * 500.f;
+
+		const bool bIsHit = UKismetSystemLibrary::SphereTraceSingle(
+			GetWorld(), StartLocation, EndLocation, SphereRadius,
+			UEngineTypes::ConvertToTraceType(ECC_WorldStatic), false,
+			TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true);
+
+		if (bIsHit && HitResult.GetActor()
+			&& HitResult.GetActor()->GetClass()->ImplementsInterface(UUS_Interactable::StaticClass()))
+		{
+			FoundInteractable = HitResult.GetActor();
+			bShouldShowPrompt = FoundInteractable->ActorHasTag(FName("NPC"))
+				|| FoundInteractable->ActorHasTag(FName("Door"));
+		}
+	}
+
+	InteractableActor = FoundInteractable;
+
+	if (bShouldShowPrompt != bInteractPromptVisible)
+	{
+		bInteractPromptVisible = bShouldShowPrompt;
+		if (bShouldShowPrompt)
+		{
+			ShowDialogueUI_Client();
+		}
+		else
+		{
+			HideDialogueUI_Client();
 		}
 	}
 }
