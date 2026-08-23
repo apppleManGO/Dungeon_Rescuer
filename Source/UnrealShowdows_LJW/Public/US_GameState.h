@@ -76,4 +76,11 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Quest")
 	void BP_OnAllNpCsRescued(FVector SpawnLocation);
+
+	// 현재 접속 플레이어 수. BP_Potal이 이 변수를 읽으므로 이름을 바꾸면 BP 컴파일이 깨진다.
+	// 주의: 원본은 `= PlayerArray.Num()`로 선언돼 있었으나 멤버 초기화식은 생성 시점에
+	// 평가되므로 항상 0이었다(갱신 주체도 없었음). 실제 값이 필요하면 GameMode의
+	// PostLogin/Logout에서 PlayerArray.Num()으로 갱신하고 복제를 걸어야 한다.
+	UPROPERTY(BlueprintReadWrite, Category = "Gameplay")
+	int32 TotalPlayers = 0;
 };
