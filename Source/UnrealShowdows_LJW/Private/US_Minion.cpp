@@ -135,6 +135,7 @@ void AUS_Minion::EndPlay(const EEndPlayReason::Type EndPlayReason)
 //소리들었을때 호출 하는함수
 void AUS_Minion::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume)
 {
+	if (Health <= 0.f) return;
 	GoToLocation(Location);
 }
 
@@ -192,9 +193,12 @@ void AUS_Minion::OnDamage(AActor* DamagedActor, float Damage, const UDamageType*
 	{
 		GetController()->StopMovement();
 		ActiveChaseTarget = nullptr;
-		GetController()->UnPossess();
 	}
 	GetCharacterMovement()->DisableMovement();
+	// UnPossess()를 하지 않는다: 폰이 possess된 채로 파괴되어야
+	// APawn::DetachFromControllerPendingDestroy -> AController::PawnPendingDestroy가
+	// AIController를 함께 Destroy한다. 미리 분리하면 컨트롤러가 월드에 영구히 남는다.
+	// 대신 사망 후 행동은 아래 진입점들의 Health 가드로 막는다.
 	//사망 애니메이션
 	if (DeathMontage)
 	{
@@ -357,8 +361,9 @@ void AUS_Minion::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 // 시야에 Pawn이 들어왔을 때 호출
 void AUS_Minion::OnPawnDetected(APawn* Pawn)
 {
+	if (Health <= 0.f) return;
 	// 플레이어 캐릭터만 인식
-	if(!Pawn->IsA<AUS_Character>())return;
+	if(!Pawn || !Pawn->IsA<AUS_Character>())return;
 	TargetPlayer = Pawn;
 
 	// 추격 속도가 아닐 때만 추격 시작
@@ -372,6 +377,8 @@ void AUS_Minion::OnPawnDetected(APawn* Pawn)
 
 void AUS_Minion::GoToLocation(const FVector& Location)
 {
+	// GameMode::AlertMinions가 죽은 미니언(소멸 대기 5초)에게도 호출할 수 있다
+	if (Health <= 0.f || !GetController()) return;
 	ActiveChaseTarget = nullptr;
 	PatrolLocation = Location;
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(),PatrolLocation);
@@ -380,6 +387,7 @@ void AUS_Minion::GoToLocation(const FVector& Location)
 void AUS_Minion::SetNextPatrolLocation()
 {
 	if(!HasAuthority()) return;
+	if (Health <= 0.f) return;
 
 	GetCharacterMovement()->MaxWalkSpeed = patrolSpeed;
     
@@ -399,6 +407,7 @@ void AUS_Minion::SetNextPatrolLocation()
 void AUS_Minion::Chase(APawn* Pawn)
 {
 	if (GetLocalRole() != ROLE_Authority || !Pawn) return;
+	if (Health <= 0.f) return;
 	GetCharacterMovement()->MaxWalkSpeed=ChaseSpeed;
 
 	if (ActiveChaseTarget != Pawn)
@@ -422,6 +431,7 @@ void AUS_Minion::Chase(APawn* Pawn)
 }
 void AUS_Minion::AttemptAttack(AActor* InTarget)
 {
+	if (Health <= 0.f || !InTarget) return;
 	float Now = GetWorld()->GetTimeSeconds();
 	if (Now - LastAttackTime < AttackCooldown) return;
 
