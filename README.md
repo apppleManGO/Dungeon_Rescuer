@@ -41,3 +41,7 @@ Unreal Engine 5.4 기반 협동 멀티플레이 던전 크롤러.
 | 클라이언트 상태 불일치 | `HasAuthority()` 검사 누락 | 서버 권한 검사 추가 |
 | 투사체 무한 스폰·누수 | `Triggered` 바인딩, 수명 미설정 | `Started` + 쿨다운 + 수명 설정 |
 | 미니언 경보 O(n²) | 매 프레임 전체 액터 검색 | 레지스트리 + 경보 쿨다운 |
+
+---
+
+초기 버전: [Dungeon_Rescuer](https://github.com/apppleManGO/Dungeon_Rescuer)
