@@ -387,7 +387,7 @@ void AUS_Character::ApplySkin(int32 InSkinIndex)
 {
 	//SkinIndex = InSkinIndex;
 	UpdateCharacterSkin(InSkinIndex);
-	UE_LOG(LogTemp, Warning, TEXT("ApplySkin called: %d"), InSkinIndex);
+	//UE_LOG(LogTemp, Warning, TEXT("ApplySkin called: %d"), InSkinIndex);
 }
 void AUS_Character::PossessedBy(AController* NewController)
 {
@@ -420,7 +420,7 @@ float AUS_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 	// 2. 체력 감소 (0 이하로 내려가지 않게 Clamp)
 	CurrentHealth = FMath::Clamp(CurrentHealth - ActualDamage, 0.0f, MaxHealth);
 
-	UE_LOG(LogTemp, Warning, TEXT("Player Took Damage: %f, Current HP: %f"), ActualDamage, CurrentHealth);
+	//UE_LOG(LogTemp, Warning, TEXT("Player Took Damage: %f, Current HP: %f"), ActualDamage, CurrentHealth);
 
 	// 3. 사망 체크
 	if (CurrentHealth <= 0.0f)
@@ -448,7 +448,7 @@ void AUS_Character::Die()
 	if (bIsDead) return;
 	bIsDead = true;
 
-	UE_LOG(LogTemp, Warning, TEXT("Player Died!"));
+	//UE_LOG(LogTemp, Warning, TEXT("Player Died!"));
 
 	if (APlayerController* PC = Cast<APlayerController>(Controller))
 	{
@@ -473,5 +473,5 @@ void AUS_Character::OnRep_CurrentHealth()
 {
 	// 예: HUD 업데이트 함수 호출
 	// if (DialogueWidget) { ... } 
-	UE_LOG(LogTemp, Log, TEXT("Health Updated on Client: %f"), CurrentHealth);
+	//UE_LOG(LogTemp, Log, TEXT("Health Updated on Client: %f"), CurrentHealth);
 }

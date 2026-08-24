@@ -94,7 +94,7 @@ void AUS_GameMode::BeginPlay()
 		if (AUS_GameState* GS = GetGameState<AUS_GameState>())
 		{
 			GS->SetGamePhase(EGamePhase::Playing);
-			UE_LOG(LogTemp, Warning, TEXT("Map [%s] loaded → Phase set to Playing"), *MapName);
+			//UE_LOG(LogTemp, Warning, TEXT("Map [%s] loaded → Phase set to Playing"), *MapName);
 		}
 	}
 	else if(MapName.Contains("Map_02"))
@@ -102,7 +102,7 @@ void AUS_GameMode::BeginPlay()
 		if (AUS_GameState* GS = GetGameState<AUS_GameState>())
 		{
 			GS->SetGamePhase(EGamePhase::Lobby);
-			UE_LOG(LogTemp, Warning, TEXT("Map [%s] loaded → Phase set to Lobby"), *MapName);
+			//UE_LOG(LogTemp, Warning, TEXT("Map [%s] loaded → Phase set to Lobby"), *MapName);
 		}
 	}
 }
@@ -120,7 +120,7 @@ void AUS_GameMode::PostLogin(APlayerController* NewPlayer)
 
 	if (SkinCount <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Character skin DataTable is missing or empty."));
+		//UE_LOG(LogTemp, Warning, TEXT("Character skin DataTable is missing or empty."));
 		return;
 	}
 
@@ -130,8 +130,8 @@ void AUS_GameMode::PostLogin(APlayerController* NewPlayer)
 	if (AUS_PlayerState* PS = NewPlayer->GetPlayerState<AUS_PlayerState>())
 	{
 		PS->SetSkinIndex(SkinIndex);
-		UE_LOG(LogTemp, Warning,
-	TEXT("[PS] %s SkinIndex = %d (Role=%d)"),
-	*GetName(), SkinIndex, (int32)GetLocalRole());
+		//UE_LOG(LogTemp, Warning,
+	//TEXT("[PS] %s SkinIndex = %d (Role=%d)"),
+	//*GetName(), SkinIndex, (int32)GetLocalRole());
 	}
 }

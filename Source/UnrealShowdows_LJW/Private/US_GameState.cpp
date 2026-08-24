@@ -112,5 +112,5 @@ void AUS_GameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 }
 void AUS_GameState::Multicast_OnAllNPCsRescued_Implementation(FVector SpawnLocation)
 {
-	UE_LOG(LogTemp, Log, TEXT("All NPCs rescued. Escape portal at %s"), *SpawnLocation.ToString());
+	//UE_LOG(LogTemp, Log, TEXT("All NPCs rescued. Escape portal at %s"), *SpawnLocation.ToString());
 }

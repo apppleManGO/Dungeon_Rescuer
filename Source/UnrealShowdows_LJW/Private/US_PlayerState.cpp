@@ -79,9 +79,9 @@ void AUS_PlayerState::SetSkinIndex(int32 NewIndex)
 
 void AUS_PlayerState::OnRep_SkinIndex(int32 OldValue)
 {
-	UE_LOG(LogTemp, Warning,
-		TEXT("[OnRep_SkinIndex] %s : %d -> %d"),
-		*GetName(), OldValue, SkinIndex);
+	//UE_LOG(LogTemp, Warning,
+		//TEXT("[OnRep_SkinIndex] %s : %d -> %d"),
+		//*GetName(), OldValue, SkinIndex);
 
 	if (APawn* Pawn = GetPawn())
 	{

@@ -25,7 +25,7 @@ void AUS_NPCDialogueActor::StartDialogue(APlayerController* Requestor)
 	}
 	if (NodesById.Num() == 0 || StartNodeId.IsNone())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NPC '%s' has empty dialogue or no StartNodeId"), *GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("NPC '%s' has empty dialogue or no StartNodeId"), *GetName());
 		return;
 	}
 
@@ -50,6 +50,6 @@ void AUS_NPCDialogueActor::StartDialogue(APlayerController* Requestor)
 	else
 	{
 		// 대체: 함수가 없으면 로그로 알려주기
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController is missing BP event 'OpenDialogue'. Implement it to show the widget."));
+		//UE_LOG(LogTemp, Warning, TEXT("PlayerController is missing BP event 'OpenDialogue'. Implement it to show the widget."));
 	}
 }
