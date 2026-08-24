@@ -18,3 +18,12 @@ Builds/
 
 # macOS
 .DS_Store
+
+# 유료 마켓플레이스 애셋 (재배포 불가 - Fab 표준 라이선스)
+# 로컬에는 존재하지만 저장소에는 올리지 않는다.
+# 클론 후 실행하려면 각자 Fab에서 받아 아래 경로에 배치할 것 (README 크레딧 참고)
+Content/CavesAndDungeons/
+Content/Low_Poly_Viking_World/
+Content/Music_For_Your_RPG/
+Content/Deadly_Creatures_Pack1_v1/
+Content/Basic_VFX/
