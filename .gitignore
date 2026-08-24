@@ -27,3 +27,8 @@ Content/Low_Poly_Viking_World/
 Content/Music_For_Your_RPG/
 Content/Deadly_Creatures_Pack1_v1/
 Content/Basic_VFX/
+
+# 저장소에 포함하지 않는 항목 (로컬에는 유지)
+Docs/
+Content/KayKit/
+Content/image/
